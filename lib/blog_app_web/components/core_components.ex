@@ -10,6 +10,7 @@ defmodule BlogAppWeb.CoreComponents do
   [heroicons_elixir](https://github.com/mveytsman/heroicons_elixir) project.
   """
   use Phoenix.Component
+  use BlogAppWeb, :verified_routes
 
   alias Phoenix.LiveView.JS
   import BlogAppWeb.Gettext
@@ -573,6 +574,37 @@ defmodule BlogAppWeb.CoreComponents do
         <Heroicons.arrow_left solid class="w-3 h-3 stroke-current inline" />
         <%= render_slot(@inner_block) %>
       </.link>
+    </div>
+    """
+  end
+
+
+  attr :account, :any, required: true
+  attr :current_account, :any, required: true
+  attr :articles_count, :integer, required: true
+
+  def account_profile(assigns) do
+    ~H"""
+    <div>
+      <div><%= @account.name %></div>
+      <div><%= @account.email %></div>
+      <div><%= @account.introduction %></div>
+      <div>Articles Count：<%= @articles_count %></div>
+      <div :if={@account.id == Map.get(@current_account || %{}, :id)}>
+        <a href={~p"/accounts/settings"}> Edit Profile</a>
+      </div>
+    </div>
+    """
+  end
+
+  attr :account_id, :integer, required: true
+  attr :current_account, :any, required: true
+  def account_profile_tab(assigns) do
+    ~H"""
+    <div>
+      <a href={~p"/accounts/profile/#{@account_id}"}>Articles</a>
+      <a href={~p"/accounts/profile/#{@account_id}/draft"} :if={@account_id == Map.get(@current_account || %{}, :id)}>Draft</a>
+      <a href={~p"/accounts/profile/#{@account_id}/likes"}>Liked Articles</a>
     </div>
     """
   end

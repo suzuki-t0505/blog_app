@@ -1,0 +1,31 @@
+<.account_profile
+  account={@current_account}
+  current_account={@current_account}
+  articles_count={@articles_count}
+/>
+
+<div>
+  <.account_profile_tab
+    account_id={@current_account.id}
+    current_account={@current_account}
+  />
+  <div>
+    <%= if length(@articles) > 0 do %>
+      <div :for={article <- @articles} class="mt-2">
+        <a href={~p"/articles/#{article.id}/edit"}>
+          <div><%= article.title %></div>
+          <div :if={article.body}><%= String.slice(article.body, 0..30) %></div>
+        </a>
+        <div phx-click="set_article_id" phx-value-id={article.id}>
+          ...
+        </div>
+        <div :if={article.id == @set_article_id}>
+          <a href={~p"/articles/#{article.id}/edit"}>Edit</a>
+          <span phx-click="delete_article" phx-value-id={article.id}>Delete</span>
+        </div>
+      </div>
+    <% else %>
+      <div>No Draft Articles</div>
+    <% end %>
+  </div>
+</div>

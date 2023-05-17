@@ -1,0 +1,42 @@
+<div :if={@article.status == 2}>
+  This article is private.
+</div>
+
+<div>
+  <a href={~p"/accounts/profile/#{@article.account.id}"}><%= @article.account.name %></a>
+  <div><%= Date.to_string(@article.submit_date) %></div>
+  <h2><%= @article.title %></h2>
+  <div>Liked：<%= @article.like_count %></div>
+  <div><%= @article.body %></div>
+  <div
+    phx-click="like_article"
+    phx-value-account_id={@current_account_id}
+    :if={
+      @current_account &&
+      (@current_account_id != @article.account.id and
+      @current_account_id not in Enum.map(@article.likes, fn like -> like.account_id end))
+    }
+  >
+    いいね
+  </div>
+</div>
+
+<div class="mt-4">
+  <h3>コメント</h3>
+  <div :for={comment <- @article.comments} class="mt-2 border-b">
+    <a href={~p"/accounts/profile/#{comment.account.id}"}><%= comment.account.name %></a>
+    <div><%= Date.to_string(NaiveDateTime.to_date(comment.inserted_at)) %></div>
+    <div><%= comment.body %></div>
+  </div>
+  <.simple_form
+    for={@form}
+    phx-change="comment_validate"
+    phx-submit="comment_save"
+    :if={Map.get(@current_account || %{}, :id) != @article.account.id and @current_account}
+  >
+    <.input field={@form[:body]} type="textarea" placeholder="Enter a Comment" />
+    <:actions>
+      <.button phx-disabled-with="submiting...">Submit</.button>
+    </:actions>
+  </.simple_form>
+</div>

@@ -13,16 +13,13 @@
   </head>
   <body class="bg-white antialiased">
     <ul class="relative z-10 flex items-center gap-4 px-4 sm:px-6 lg:px-8 justify-end">
+      <li>
+        <.link href={~p"/"}>Home</.link>
+      </li>
       <%= if @current_account do %>
         <li class="text-[0.8125rem] leading-6 text-zinc-900">
-          <%= @current_account.email %>
-        </li>
-        <li>
-          <.link
-            href={~p"/accounts/settings"}
-            class="text-[0.8125rem] leading-6 text-zinc-900 font-semibold hover:text-zinc-700"
-          >
-            Settings
+          <.link href={~p"/accounts/profile/#{@current_account.id}"}>
+            <%= @current_account.email %>
           </.link>
         </li>
         <li>
@@ -33,6 +30,9 @@
           >
             Log out
           </.link>
+        </li>
+        <li>
+          <.link href={~p"/articles/new"}>Post</.link>
         </li>
       <% else %>
         <li>

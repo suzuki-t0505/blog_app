@@ -1,0 +1,21 @@
+<.header>
+
+</.header>
+
+<.simple_form for={@form} phx-change="validate" phx-submit="save">
+  <.input field={@form[:title]} type="text" label="Title" />
+  <.input field={@form[:body]} type="textarea" label="Body" />
+  <.input
+    field={@form[:status]}
+    type="select"
+    label="Public Type"
+    options={[public: 1, private: 2, draft: 0]}
+  />
+  <:actions>
+    <%= if @live_action == :new do %>
+      <.button phx-disabled-with="Submiting...">Submit</.button>
+    <% else %>
+      <.button phx-disabled-with="Savinging...">Save</.button>
+    <% end %>
+  </:actions>
+</.simple_form>

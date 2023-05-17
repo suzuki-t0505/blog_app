@@ -89,6 +89,12 @@ defmodule BlogApp.Accounts.Account do
     end
   end
 
+  def profile_changeset(account, attrs) do
+    account
+    |> cast(attrs, [:name, :introduction])
+    |> validate_required(:name)
+  end
+
   @doc """
   A account changeset for changing the email.
 
