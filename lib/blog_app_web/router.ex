@@ -23,8 +23,8 @@ defmodule BlogAppWeb.Router do
     live_session :home_authenticated, on_mount: [{BlogAppWeb.AccountAuth, :mount_current_account}] do
       live "/", ArticleLive.Summary, :summary
       live "/articles/show/:article_id", ArticleLive.Show, :show
-      live "/accounts/profile/:account_id", AccountLive.Info, :info
-      live "/accounts/profile/:account_id/likes", AccountLive.Likes, :likes
+      live "/accounts/profile/:account_id", AccountPageLive, :info
+      live "/accounts/profile/:account_id/likes", AccountPageLive, :likes
     end
   end
 
@@ -74,7 +74,7 @@ defmodule BlogAppWeb.Router do
       live "/accounts/settings", AccountSettingsLive, :edit
       live "/accounts/settings/confirm_email/:token", AccountSettingsLive, :confirm_email
 
-      live "/accounts/profile/:account_id/draft", AccountLive.Draft, :draft
+      live "/accounts/profile/:account_id/draft", AccountPageLive, :draft
 
       live "/articles/new", ArticleLive.Form, :new
       live "/articles/:article_id/edit", ArticleLive.Form, :edit

@@ -1,0 +1,50 @@
+<.account_profile
+  account={@account}
+  current_account={@current_account}
+  articles_count={@articles_count}
+/>
+
+<div>
+  <.account_profile_tab account_id={@account.id} current_account={@current_account} />
+  <div>
+    <%= if length(@articles) > 0 do %>
+      <div :for={article <- @articles} class="mt-2">
+        <!-- live_actionが:info、:likesの場合はここが表示される -->
+        <a href={~p"/articles/show/#{article.id}"} :if={@live_action in [:info, :likes]}>
+          <div><%= article.account.name %></div>
+          <div><%= Date.to_string(article.submit_date) %></div>
+          <h2><%= article.title %></h2>
+          <div>Liked：<%= article.like_count %></div>
+        </a>
+
+        <!-- live_actionが:draftの場合はここが表示させる -->
+        <a href={~p"/articles/#{article.id}/edit"} :if={@live_action == :draft}>
+          <div><%= article.title %></div>
+          <div :if={article.body}><%= String.slice(article.body, 0..30) %></div>
+        </a>
+
+        <!-- live_actionが:info、:draftの場合はここが表示される -->
+        <%= if @live_action in [:info, :draft] do %>
+          <div phx-click="set_article_id" phx-value-id={article.id} :if={@account.id == Map.get(@current_account || %{}, :id)}>
+            ...
+          </div>
+          <div :if={article.id == @set_article_id}>
+            <a href={~p"/articles/#{article.id}/edit"}>Edit</a>
+            <span phx-click="delete_article" phx-value-id={article.id}>Delete</span>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <div>
+        <%=
+          case @live_action do
+            :info -> "No Articles"
+            :draft -> "No Draft Articles"
+            :likes -> "No Liked Articles"
+            _ -> ""
+          end
+        %>
+      </div>
+    <% end %>
+  </div>
+</div>

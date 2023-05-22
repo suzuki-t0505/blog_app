@@ -39,9 +39,12 @@ defmodule BlogAppWeb.ArticleLive.Show do
     socket =
       case Comments.create_comment(params) do
         {:ok, _comment} ->
+          cs = Comments.change_comment(%Comments.Comment{})
+
           socket
           |> put_flash(:info, "Comment created successfully")
           |> assign(:article, Articles.get_article!(socket.assigns.article.id))
+          |> assign_form(cs)
 
         {:error, %Ecto.Changeset{} = cs} ->
           assign_form(socket, cs)

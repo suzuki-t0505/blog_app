@@ -49,6 +49,7 @@ defmodule BlogApp.Articles do
     Article
     |> where([a], a.account_id == ^account_id)
     |> where([a], a.status == 0)
+    |> preload(:account)
     |> Repo.all()
   end
 

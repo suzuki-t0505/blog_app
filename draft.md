@@ -168,4 +168,4 @@ $ mix phx.gen.schema Likes.Like likes account_id:references:accounts article_id:
 ### live_actionで表示する内容を変える
 
 
-※メモ：defat, info, likesの内容をLiveComponentにする
+※メモ：AccountSettingsLiveをLiveComponentに変更する
