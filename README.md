@@ -1,23 +1,27 @@
 # BlogApp
 
-To start your Phoenix server:
+`Phoenix LiveView`を使用したブログアプリ
+[下書きシナリオ](draft.md)
 
-  * Run `mix setup` to install and setup dependencies
-  * Start Phoenix endpoint with `mix phx.server` or inside IEx with `iex -S mix phx.server`
+## セットアップ
 
-Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
+```bash
+$ git clone git@github.com:suzuki-t0505/blog_app.git
+$ cd blog_app
+$ mix deps.get && mix deps.compile
+$ mix ecto.reset
+```
 
-Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
+## 機能のみ
 
-## Learn more
+```bash
+$ git checkout master
+$ mix phx.server
+```
 
-  * Official website: https://www.phoenixframework.org/
-  * Guides: https://hexdocs.pm/phoenix/overview.html
-  * Docs: https://hexdocs.pm/phoenix
-  * Forum: https://elixirforum.com/c/phoenix-forum
-  * Source: https://github.com/phoenixframework/phoenix
+## レイアウト済み
 
-
-## シナリオの下書き
-
-- [下書き](draft.md)
+```bash
+$ git checkout layout_version
+$ mix phx.server
+```
