@@ -163,6 +163,22 @@ $ mix phx.gen.schema Likes.Like likes account_id:references:accounts article_id:
 
 ### 自作コンポーネントの作成
 
+## アカウント設定ページをLiveComponentに変更する
+
+### ルートの変更
+
+### AccountSettingsLiveをAccountSettingsComponentに変更する
+
+### LiveComponentのライフサイクル
+
+### AccountPageLiveのテンプレートにLiveComponentを追加する
+
+### mountを削除しupdateを追加する
+
+### LiveComponentから親LiveViewにメッセージ送信
+
+### パスワード変更した時のリダイレクト先を変更する
+
 ## 記事作成、編集ページの作成
 
 ### live_actionで表示する内容を変える

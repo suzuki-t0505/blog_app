@@ -1,5 +1,9 @@
 <.header>
-
+  <%= if @live_action == :new do %>
+    <div>New Article</div>
+  <% else %>
+    <div>Edit Article</div>
+  <% end %>
 </.header>
 
 <.simple_form for={@form} phx-change="validate" phx-submit="save">

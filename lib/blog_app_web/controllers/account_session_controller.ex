@@ -9,9 +9,7 @@ defmodule BlogAppWeb.AccountSessionController do
   end
 
   def create(conn, %{"_action" => "password_updated"} = params) do
-    conn
-    |> put_session(:account_return_to, ~p"/accounts/settings")
-    |> create(params, "Password updated successfully!")
+    create(conn, params, "Password updated successfully!")
   end
 
   def create(conn, params) do
@@ -24,6 +22,7 @@ defmodule BlogAppWeb.AccountSessionController do
     if account = Accounts.get_account_by_email_and_password(email, password) do
       conn
       |> put_flash(:info, info)
+      |> put_session(:account_return_to, ~p"/accounts/profile/#{account.id}")
       |> AccountAuth.log_in_account(account, account_params)
     else
       # In order to prevent user enumeration attacks, don't disclose whether the email is registered.

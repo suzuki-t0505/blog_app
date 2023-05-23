@@ -10,12 +10,14 @@
     <%= if length(@articles) > 0 do %>
       <div :for={article <- @articles} class="mt-2">
         <!-- live_actionが:info、:likesの場合はここが表示される -->
-        <a href={~p"/articles/show/#{article.id}"} :if={@live_action in [:info, :likes]}>
-          <div><%= article.account.name %></div>
-          <div><%= Date.to_string(article.submit_date) %></div>
-          <h2><%= article.title %></h2>
-          <div>Liked：<%= article.like_count %></div>
-        </a>
+          <a href={~p"/accounts/profile/#{article.account.id}"}>
+            <%= article.account.name %>
+          </a>
+          <a href={~p"/articles/show/#{article.id}"}>
+            <div ><%= if article.submit_date, do: Date.to_string(article.submit_date), else: "" %></div>
+            <h2><%= article.title %></h2>
+            <div>Liked：<%= article.like_count %></div>
+          </a>
 
         <!-- live_actionが:draftの場合はここが表示させる -->
         <a href={~p"/articles/#{article.id}/edit"} :if={@live_action == :draft}>
@@ -48,3 +50,11 @@
     <% end %>
   </div>
 </div>
+
+<.modal :if={@live_action in [:edit, :confirm_email]} id="account_settings" show on_cancel={JS.patch(~p"/accounts/profile/#{@account.id}")}>
+  <.live_component
+    module={BlogAppWeb.AccountSettingsComponent}
+    id={@live_action}
+    current_account={@current_account}
+  />
+</.modal>

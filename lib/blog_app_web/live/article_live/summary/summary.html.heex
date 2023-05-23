@@ -4,13 +4,19 @@
 
 <div>
   <.simple_form for={@search_articles_form} phx-change="search_articles">
-    <.input field={@search_articles_form["keyword"]} type="text" label="Search Articles" />
+    <.input
+      field={@search_articles_form["keyword"]}
+      type="text"
+      placeholder="Search articles"
+    />
   </.simple_form>
 </div>
 
 <div :for={article <- @articles} class="mt-2">
+  <a href={~p"/accounts/profile/#{article.account.id}"}>
+    <%= article.account.name %>
+  </a>
   <a href={~p"/articles/show/#{article.id}"}>
-    <div><%= article.account.name %></div>
     <div><%= Date.to_string(article.submit_date) %></div>
     <h2><%= article.title %></h2>
     <div>Liked：<%= article.like_count %></div>

@@ -21,6 +21,23 @@ defmodule BlogAppWeb.AccountPageLive do
     {:noreply, socket}
   end
 
+  def handle_params(%{"token" => token}, _session, socket) do
+    socket =
+      case Accounts.update_account_email(socket.assigns.current_account, token) do
+        :ok ->
+          put_flash(socket, :info, "Email changed successfully.")
+
+        :error ->
+          put_flash(socket, :error, "Email change link is invalid or it has expired.")
+      end
+
+    {:ok, push_navigate(socket, to: ~p"/accounts/profile/#{socket.assigns.current_account.id}")}
+  end
+
+  def handle_params(_params, _session, socket) do
+    {:noreply, apply_action(socket, :edit)}
+  end
+
   # "/accounts/profile/:account_id"で呼ばれるやつ
   defp apply_action(socket, :info) do
     account = socket.assigns.account
@@ -56,6 +73,15 @@ defmodule BlogAppWeb.AccountPageLive do
     |> assign(:page_title, account.name <> " - liked")
   end
 
+  defp apply_action(socket, :edit) do
+    account = socket.assigns.current_account
+    socket
+    |> assign(:account, account)
+    |> assign_article([])
+    |> assign_articles_count(account.id, get_current_account_id(socket))
+    |> assign(:page_title, "account settings")
+  end
+
   defp get_current_account_id(socket) do
     Map.get(socket.assigns.current_account || %{}, :id)
   end
@@ -73,6 +99,19 @@ defmodule BlogAppWeb.AccountPageLive do
     socket
     |> assign(:articles, articles)
     |> assign(:set_article_id, nil)
+  end
+
+  def handle_info({:updated, %Accounts.Account{id: id}}, socket) do
+    {:noreply, redirect(socket, to: ~p"/accounts/profile/#{id}")}
+  end
+
+  def handle_info({:update_email, %Accounts.Account{id: id}}, socket) do
+    socket =
+      socket
+      |> put_flash(:info, "A link to confirm your email change has been sent to the new address.")
+      |> redirect(to: ~p"/accounts/profile/#{id}")
+
+    {:noreply, socket}
   end
 
   def handle_event("set_article_id", %{"id" => id}, socket) do
