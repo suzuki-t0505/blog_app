@@ -1,7 +1,10 @@
 # BlogApp
 
 `Phoenix LiveView`を使用したブログアプリ
-[下書きシナリオ](draft.md)
+
+※phoenixのバージョンは1.7
+
+- [下書きシナリオ](draft.md)
 
 ## セットアップ
 
