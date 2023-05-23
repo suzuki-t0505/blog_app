@@ -4,40 +4,58 @@
   articles_count={@articles_count}
 />
 
-<div>
-  <.account_profile_tab account_id={@account.id} current_account={@current_account} />
+<div class="border-2 rounded-lg mt-6 py-2 px-4">
+  <.account_profile_tab
+    account_id={@account.id}
+    current_account={@current_account}
+    live_action={@live_action}
+  />
   <div>
     <%= if length(@articles) > 0 do %>
-      <div :for={article <- @articles} class="mt-2">
+      <div :for={article <- @articles} class="flex justify-between mt-2 pb-2 border-b last:border-none cursor-pointer">
         <!-- live_actionが:info、:likesの場合はここが表示される -->
-          <a href={~p"/accounts/profile/#{article.account.id}"}>
+        <div :if={@live_action in [:info, :likes]}>
+          <a href={~p"/accounts/profile/#{article.account.id}"} class="hover:underline">
             <%= article.account.name %>
           </a>
           <a href={~p"/articles/show/#{article.id}"}>
-            <div ><%= if article.submit_date, do: Date.to_string(article.submit_date), else: "" %></div>
-            <h2><%= article.title %></h2>
+            <div class="text-gray-600 text-xs"><%= if article.submit_date, do: Date.to_string(article.submit_date), else: "" %></div>
+            <h2 class="my-2 font-bold text-2xl hover:underline"><%= article.title %></h2>
             <div>Liked：<%= article.like_count %></div>
           </a>
+        </div>
 
         <!-- live_actionが:draftの場合はここが表示させる -->
-        <a href={~p"/articles/#{article.id}/edit"} :if={@live_action == :draft}>
-          <div><%= article.title %></div>
-          <div :if={article.body}><%= String.slice(article.body, 0..30) %></div>
-        </a>
+        <div :if={@live_action == :draft}>
+          <a href={~p"/articles/#{article.id}/edit"}>
+            <h2 class="my-2 font-bold text-2xl hover:underline"><%= article.title %></h2>
+            <div :if={article.body}>
+              <%= String.slice(article.body, 0..30) %><%= if String.length(article.body) > 30, do: "...", else: "" %>
+            </div>
+          </a>
+        </div>
 
         <!-- live_actionが:info、:draftの場合はここが表示される -->
-        <%= if @live_action in [:info, :draft] do %>
-          <div phx-click="set_article_id" phx-value-id={article.id} :if={@account.id == Map.get(@current_account || %{}, :id)}>
+        <div :if={@live_action in [:info, :draft]} class="relative">
+          <div
+            class="border rounded w-min px-1 mt-2"
+            phx-click="set_article_id"
+            phx-value-id={article.id}
+            :if={@account.id == Map.get(@current_account || %{}, :id)}
+          >
             ...
           </div>
-          <div :if={article.id == @set_article_id}>
-            <a href={~p"/articles/#{article.id}/edit"}>Edit</a>
-            <span phx-click="delete_article" phx-value-id={article.id}>Delete</span>
+          <div
+            :if={article.id == @set_article_id}
+            class="absolute right-0 border rounded-lg py-2 px-2 mt-2 bg-white z-10"
+          >
+            <a href={~p"/articles/#{article.id}/edit"} class="block border-b pb-2 hover:underline">Edit</a>
+            <span phx-click="delete_article" phx-value-id={article.id} class="block mt-2 hover:underline">Delete</span>
           </div>
-        <% end %>
+        </div>
       </div>
     <% else %>
-      <div>
+      <div class="text-xl font-bold mt-2">
         <%=
           case @live_action do
             :info -> "No Articles"
@@ -51,7 +69,11 @@
   </div>
 </div>
 
-<.modal :if={@live_action in [:edit, :confirm_email]} id="account_settings" show on_cancel={JS.patch(~p"/accounts/profile/#{@account.id}")}>
+<.modal
+  :if={@live_action in [:edit, :confirm_email]}
+  id="account_settings"
+  show
+  on_cancel={JS.patch(~p"/accounts/profile/#{@account.id}")}>
   <.live_component
     module={BlogAppWeb.AccountSettingsComponent}
     id={@live_action}

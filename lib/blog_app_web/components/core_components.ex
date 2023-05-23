@@ -585,28 +585,58 @@ defmodule BlogAppWeb.CoreComponents do
 
   def account_profile(assigns) do
     ~H"""
-    <div>
-      <div><%= @account.name %></div>
-      <div><%= @account.email %></div>
-      <div><%= @account.introduction %></div>
+    <div class="border-2 rounded-lg px-2 py-4">
+      <div class="font-bold font-lg"><%= @account.name %></div>
+      <div class="text-gray-600 text-sm"><%= @account.email %></div>
+      <div class="my-2 pb-2 whitespace-pre-wrap border-b"><%= @account.introduction %></div>
       <div>Articles Count：<%= @articles_count %></div>
-      <div :if={@account.id == Map.get(@current_account || %{}, :id)}>
-        <a href={~p"/accounts/settings"}> Edit Profile</a>
-      </div>
+      <a
+        href={~p"/accounts/settings"}
+        class="mt-2 rounded-lg bg-gray-200 hover:bg-gray-400 py-1 px-4 block w-1/5 text-center"
+        :if={@account.id == Map.get(@current_account || %{}, :id)}
+      >
+        Edit Profile
+      </a>
     </div>
     """
   end
 
   attr :account_id, :integer, required: true
   attr :current_account, :any, required: true
+  attr :live_action, :atom, required: true
   def account_profile_tab(assigns) do
     ~H"""
-    <div>
-      <a href={~p"/accounts/profile/#{@account_id}"}>Articles</a>
-      <a href={~p"/accounts/profile/#{@account_id}/draft"} :if={@account_id == Map.get(@current_account || %{}, :id)}>Draft</a>
-      <a href={~p"/accounts/profile/#{@account_id}/likes"}>Liked Articles</a>
+    <div class="flex gap-2 items-center border-b-2 my-2">
+      <a
+        href={~p"/accounts/profile/#{@account_id}"}
+        class={tabs_class(@live_action, :info)}
+      >
+        Articles
+      </a>
+      <a
+        href={~p"/accounts/profile/#{@account_id}/draft"}
+        :if={@account_id == Map.get(@current_account || %{}, :id)}
+        class={tabs_class(@live_action, :draft)}
+      >
+        Draft
+      </a>
+      <a
+        href={~p"/accounts/profile/#{@account_id}/likes"}
+        class={tabs_class(@live_action, :likes)}
+      >
+        Liked Articles
+      </a>
     </div>
     """
+  end
+
+  @classes ~w(block rounded-t-lg px-2 py-2 text-xl)
+  defp tabs_class(live_action, action) when live_action == action do
+    Enum.join(@classes ++ ~w(bg-gray-400), " ")
+  end
+
+  defp tabs_class(_live_action, _action) do
+    Enum.join(@classes ++ ~w(bg-gray-200 hover:bg-gray-400), " ")
   end
 
   ## JS Commands

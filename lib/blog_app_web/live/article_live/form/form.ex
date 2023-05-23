@@ -41,6 +41,7 @@ defmodule BlogAppWeb.ArticleLive.Form do
   end
 
   defp save_article(socket, :edit, params) do
+    IO.inspect(params)
     case Articles.update_article(socket.assigns.article, params) do
       {:ok, article} ->
         socket
