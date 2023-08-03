@@ -2,13 +2,20 @@
   This article is private.
 </div>
 
-<div>
-  <a href={~p"/accounts/profile/#{@article.account.id}"}><%= @article.account.name %></a>
-  <div><%= Date.to_string(@article.submit_date) %></div>
-  <h2><%= @article.title %></h2>
+<div class="border-2 rounded-lg py-2 px-4">
+  <a
+    href={~p"/accounts/profile/#{@article.account.id}"}
+    class="hover:underline"
+  >
+    <%= @article.account.name %>
+  </a>
+  <div class="text-gray-600 text-xs"><%= Date.to_string(@article.submit_date) %></div>
   <div>Liked：<%= @article.like_count %></div>
-  <div><%= @article.body %></div>
+  <h2 class="my-2 font-bold text-2xl"><%= @article.title %></h2>
+  <!-- html側では/nで改行ができないのでwhitespace: pre-wrapを適用する -->
+  <div class="my-2 whitespace-pre-wrap"><%= @article.body %></div>
   <div
+    class="rounded-lg w-min py-1 px-2 bg-gray-200 hover:bg-gray-400 cursor-pointer"
     phx-click="like_article"
     phx-value-account_id={@current_account_id}
     :if={
@@ -17,15 +24,15 @@
       @current_account_id not in Enum.map(@article.likes, fn like -> like.account_id end))
     }
   >
-    いいね
+    Liked
   </div>
 </div>
 
-<div class="mt-4">
-  <h3>コメント</h3>
-  <div :for={comment <- @article.comments} class="mt-2 border-b">
-    <a href={~p"/accounts/profile/#{comment.account.id}"}><%= comment.account.name %></a>
-    <div><%= Date.to_string(NaiveDateTime.to_date(comment.inserted_at)) %></div>
+<div class="mt-4 border-2 rounded-lg py-2 px-4">
+  <h3 class="font-semibold text-xl">Comments</h3>
+  <div :for={comment <- @article.comments} class="pb-2 mt-2 border-b last:border-none">
+    <a href={~p"/accounts/profile/#{comment.account.id}"} class="hover:underline"><%= comment.account.name %></a>
+    <div class="text-gray-600 text-xs"><%= Date.to_string(NaiveDateTime.to_date(comment.inserted_at)) %></div>
     <div><%= comment.body %></div>
   </div>
   <.simple_form

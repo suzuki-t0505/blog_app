@@ -31,7 +31,7 @@ defmodule BlogAppWeb.AccountPageLive do
           put_flash(socket, :error, "Email change link is invalid or it has expired.")
       end
 
-    {:ok, push_navigate(socket, to: ~p"/accounts/profile/#{socket.assigns.current_account.id}")}
+    {:noreply, push_navigate(socket, to: ~p"/accounts/profile/#{socket.assigns.current_account.id}")}
   end
 
   def handle_params(_params, _session, socket) do

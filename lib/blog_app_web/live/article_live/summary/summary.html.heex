@@ -2,7 +2,7 @@
   Listing Articles
 </.header>
 
-<div>
+<div class="my-5">
   <.simple_form for={@search_articles_form} phx-change="search_articles">
     <.input
       field={@search_articles_form["keyword"]}
@@ -12,13 +12,13 @@
   </.simple_form>
 </div>
 
-<div :for={article <- @articles} class="mt-2">
-  <a href={~p"/accounts/profile/#{article.account.id}"}>
+<div :for={article <- @articles} class="mt-2 border-2 rounded-lg py-2 px-4 cursor-pointer">
+  <a href={~p"/accounts/profile/#{article.account.id}"} class="hover:underline">
     <%= article.account.name %>
   </a>
   <a href={~p"/articles/show/#{article.id}"}>
-    <div><%= Date.to_string(article.submit_date) %></div>
-    <h2><%= article.title %></h2>
+    <div class="text-gray-600 text-xs"><%= Date.to_string(article.submit_date) %></div>
+    <h2 class="my-2 font-bold text-2xl hover:underline"><%= article.title %></h2>
     <div>Liked：<%= article.like_count %></div>
   </a>
 </div>
